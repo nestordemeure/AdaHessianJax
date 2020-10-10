@@ -4,7 +4,7 @@ from jax.experimental.optimizers import make_schedule
 from adahessianJax.second_order_optimizer_builder import second_order_optimizer
 
 @second_order_optimizer
-def adahessian(step_size=0.15, b1=0.9, b2=0.999, eps=1e-4, weight_decay=0.0, hessian_power=1):
+def adahessian(step_size=1e-3, b1=0.9, b2=0.999, eps=1e-8, weight_decay=0.0, hessian_power=1):
     """Construct optimizer triple for AdaHessian.
         Args:
         step_size: positive scalar, or a callable representing a step size schedule that maps the iteration index to positive scalar.

@@ -18,6 +18,10 @@ The implementation tries to stay close to [jax.experimental.optimizers](https://
 # builds an optimizer triplet, no need to pass a learning rate
 opt_init, opt_update, get_params = adahessian()
 
+# generates initial state using network parameters AND a Jax random generator key
+rng = numpy.random.RandomState(0)
+opt_state = opt_init(init_params, rng)
+
 # uses the optimizer, note that we pass the loss and its input instead of the gradient
 opt_update(i, loss, (params, batch), opt_state, rng, argnums=0)
 ```
@@ -26,7 +30,7 @@ We recommand looking at the [example folder](https://github.com/nestordemeure/Ad
 
 ## TODO
 
-- insure we use rng properly: if we call random twice on the same `rng`, do we get the same output ? can we store random inside optimizer ?
+- the implementation underperform, why ?
 - test pip instalation
 - use [this readme](https://github.com/davda54/ada-hessian) as inspiration for documentation
 - make PR to add this implementation to list on [AdaHessian repo](https://github.com/amirgholami/adahessian)
