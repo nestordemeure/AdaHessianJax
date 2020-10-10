@@ -30,7 +30,7 @@ from jax import jit, grad, random
 from jax.experimental import optimizers
 from jax.experimental import stax
 from jax.experimental.stax import Dense, Relu, LogSoftmax
-from examples import datasets
+import datasets
 
 
 def loss(params, batch):
@@ -71,7 +71,7 @@ if __name__ == "__main__":
         yield train_images[batch_idx], train_labels[batch_idx]
   batches = data_stream()
 
-  opt_init, opt_update, get_params = optimizers.momentum(step_size, mass=momentum_mass)
+  opt_init, opt_update, get_params = optimizers.adam(step_size)
 
   @jit
   def update(i, opt_state, batch):
