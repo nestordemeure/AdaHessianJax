@@ -26,7 +26,7 @@ import itertools
 import numpy.random as npr
 
 import jax.numpy as jnp
-from jax import jit, grad, random
+from jax import jit, random
 from jax.experimental import stax
 from jax.experimental.stax import Dense, Relu, LogSoftmax
 
@@ -76,10 +76,11 @@ if __name__ == "__main__":
     @jit
     def update(i, opt_state, batch):
         params = get_params(opt_state)
-        return opt_update(i, loss, (params, batch), opt_state, rng)
+        return opt_update(i, loss, (params, batch), opt_state)
 
-    _, init_params = init_random_params(rng, (-1, 28 * 28))
-    opt_state = opt_init(init_params)
+    rng_param, rng_optimizer = random.split(rng)
+    _, init_params = init_random_params(rng_param, (-1, 28 * 28))
+    opt_state = opt_init(init_params, rng_optimizer)
     itercount = itertools.count()
 
     print("\nStarting training...")

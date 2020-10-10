@@ -2,8 +2,6 @@
 
 [Jax](https://github.com/google/jax) implementation of the [AdaHessian optimizer](https://github.com/amirgholami/adahessian), a second order based optimizer for neural networks.
 
-**Warning:** This is a work in progress not operational yet (I hope to get a clean working version within a week).
-
 ## Usage
 
 You can install this librarie with:
@@ -12,7 +10,7 @@ You can install this librarie with:
 pip install git+https://github.com/nestordemeure/AdaHessianJax.git
 ```
 
-The implementation tries to stay close to [jax.experimental.optimizers](https://jax.readthedocs.io/en/latest/jax.experimental.optimizers.html):
+The implementation tries to stay close to [jax.experimental.optimizers](https://jax.readthedocs.io/en/latest/jax.experimental.optimizers.html) but introduces some modifications due to the need for both randomness and access to the gradient computation:
 
 ```python
 # builds an optimizer triplet, no need to pass a learning rate
@@ -23,14 +21,13 @@ rng = numpy.random.RandomState(0)
 opt_state = opt_init(init_params, rng)
 
 # uses the optimizer, note that we pass the loss and its input instead of the gradient
-opt_update(i, loss, (params, batch), opt_state, rng, argnums=0)
+opt_update(i, loss, (params, batch), opt_state)
 ```
 
 We recommand looking at the [example folder](https://github.com/nestordemeure/AdaHessianJax/tree/main/examples) to see the optimizer in use.
 
 ## TODO
 
-- the implementation underperform, why ?
 - test pip instalation
 - use [this readme](https://github.com/davda54/ada-hessian) as inspiration for documentation
 - make PR to add this implementation to list on [AdaHessian repo](https://github.com/amirgholami/adahessian)
