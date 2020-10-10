@@ -28,7 +28,6 @@ We recommand looking at the [example folder](https://github.com/nestordemeure/Ad
 
 ## TODO
 
-- test pip instalation
-- use [this readme](https://github.com/davda54/ada-hessian) as inspiration for documentation
-- make PR to add this implementation to list on [AdaHessian repo](https://github.com/amirgholami/adahessian)
+- use [this readme](https://github.com/davda54/ada-hessian) as inspiration to improve documentation
 - do a [time](https://jax.readthedocs.io/en/latest/profiling.html) and [memory](https://jax.readthedocs.io/en/latest/device_memory_profiling.html) profiling of the code to compare adahessian et adam
+- test adahessian on larger benchmarks
