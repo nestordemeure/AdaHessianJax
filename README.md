@@ -2,6 +2,8 @@
 
 [Jax](https://github.com/google/jax) implementation of the [AdaHessian optimizer](https://github.com/amirgholami/adahessian), a second order based optimizer for neural networks.
 
+**Warning:** This is a work in progress not operational yet (I hope to get a clean working version within a week).
+
 ## Usage
 
 You can install this librarie with:
@@ -10,23 +12,21 @@ You can install this librarie with:
 pip install git+https://github.com/nestordemeure/AdaHessianJax.git
 ```
 
-The implementation tries to stay as compatible as possible with [JAX's optimizers module](https://jax.readthedocs.io/en/latest/jax.experimental.optimizers.html):
+The implementation tries to stay close to [jax.experimental.optimizers](https://jax.readthedocs.io/en/latest/jax.experimental.optimizers.html):
 
 ```python
-# builds an optimizer triple
-TODO
+# builds an optimizer triplet, no need to pass a learning rate
+opt_init, opt_update, get_params = adahessian()
 
-# uses the optimizer
-TODO
+# uses the optimizer, note that we pass the loss and its input instead of the gradient
+opt_update(i, loss, (params, batch), opt_state, rng, argnums=0)
 ```
 
-We recommand browsing the [example folder](https://github.com/nestordemeure/AdaHessianJax/tree/main/examples) to see the optimizer in action.
+We recommand looking at the [example folder](https://github.com/nestordemeure/AdaHessianJax/tree/main/examples) to see the optimizer in use.
 
 ## TODO
 
-- finish prototype
-- get example working with AdaHessian
-- if we call random twice on the same `rng`, do we get the same output ?
+- insure we use rng properly: if we call random twice on the same `rng`, do we get the same output ? can we store random inside optimizer ?
 - test pip instalation
 - use [this readme](https://github.com/davda54/ada-hessian) as inspiration for documentation
 - make PR to add this implementation to list on [AdaHessian repo](https://github.com/amirgholami/adahessian)

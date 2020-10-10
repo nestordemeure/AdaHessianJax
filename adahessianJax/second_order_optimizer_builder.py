@@ -3,7 +3,7 @@
     This is derived from the decorator implemented in https://github.com/google/jax/blob/master/jax/experimental/optimizers.py
 """
 
-from typing import Callable, NamedTuple, Tuple
+from typing import Callable, NamedTuple, Tuple, Any
 import functools
 import numpy.random as npr
 from jax import grad
@@ -11,9 +11,10 @@ from jax.util import partial, unzip2, safe_zip, safe_map
 from jax.tree_util import tree_flatten, tree_unflatten # , tree_map, register_pytree_node
 from jax.experimental.optimizers import Step, Updates, OptimizerState, InitFn, ParamsFn, Params, State, Optimizer
 
-from adahessianJax.hessian_computation import hutchinson_hessian_trace
+from adahessianJax.hessian_computation import hutchinson_grad_and_hessian
 
-SecondOrderUpdateFn = Callable[[Step, Updates, Updates, OptimizerState], OptimizerState]
+RngKey = Any
+SecondOrderUpdateFn = Callable[[Step, Updates, Updates, OptimizerState, RngKey], OptimizerState]
 
 class SecondOrderOptimizer(NamedTuple):
     init_fn: InitFn
@@ -42,11 +43,9 @@ def second_order_optimizer(opt_maker: Callable[...,
             return OptimizerState(states_flat, tree, subtrees)
 
         @functools.wraps(update)
-        def tree_update(i, loss, loss_input, opt_state, argnum=0):
+        def tree_update(i, loss, loss_input, opt_state, rng, argnums=0):
             # computes gradient and hessian
-            rng = npr.RandomState(0) # TODO
-            grad_tree = grad(loss, argnums=argnum)
-            hessian_tree = hutchinson_hessian_trace(loss, loss_input, rng)[argnum]
+            grad_tree, hessian_tree = hutchinson_grad_and_hessian(loss, loss_input, rng, argnums=argnums)
             # flattens trees
             states_flat, tree_opt_state, subtrees = opt_state
             grad_flat, _ = tree_flatten(grad_tree)

@@ -1,7 +1,7 @@
 import numpy
 import jax.numpy as jnp
 from jax import jvp, grad, random
-from jax.tree_util import tree_map
+from jax.tree_util import tree_map, tree_multimap
 
 def tree_rademacher(tree, rng):
     """
@@ -15,17 +15,19 @@ def tree_weighted_mean(tree, weights):
     """
     applies a weighted mean to all the leafs of the tree
     """
-    return tree_map(jnp.mean, tree * weights)
+    def weighted_mean(x, weight): return jnp.mean(weight * x)
+    return tree_multimap(weighted_mean, tree, weights)
 
-def hessian_vector_product(f, primals, tangents):
+def hessian_vector_product(f, primals, tangents, argnums=0):
     """
-    Computes the hessian vector product: d²f(primal) * tangents
+    Computes the gradient and the hessian vector product which is: d²f(primal) * tangents
     See the [autodiff cookbook](https://jax.readthedocs.io/en/latest/notebooks/autodiff_cookbook.html#Hessian-vector-products-using-both-forward--and-reverse-mode) for more information.
     `primals` and `tangent` are expected to be tuples with one element per input of f, if f has only one input, you can pass something of the form (x,) to signify a one element tuple.
     """
-    return jvp(grad(f), primals, tangents)[1]
+    (gradient, hessian_vector_prod) = jvp(grad(f, argnums=argnums), primals, tangents)
+    return gradient, hessian_vector_prod
 
-def hutchinson_hessian_trace(f, x, rng):
+def hutchinson_grad_and_hessian(f, x, rng, argnums=0):
     """
     Uses Hutchinson's randomized algorithm to estimate the trace of the hessian of f in x where x is a pytree
     divide by number of element to get average diagonal element.
@@ -33,6 +35,6 @@ def hutchinson_hessian_trace(f, x, rng):
     This is then combined with a hessian-vector-product to estimate the trace of the Hessian.
     """
     random_vector = tree_rademacher(x, rng)
-    diagonal = hessian_vector_product(f, x, random_vector)
-    trace = tree_weighted_mean(random_vector, diagonal)
-    return trace
+    gradient, hessian_vector_prod = hessian_vector_product(f, x, random_vector, argnums=argnums)
+    hessian = tree_weighted_mean(random_vector[argnums], hessian_vector_prod)
+    return gradient, hessian
