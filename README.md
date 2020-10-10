@@ -20,12 +20,13 @@ TODO
 TODO
 ```
 
-We recommand browsing the [example folder](https://github.com/nestordemeure/AdaHessianJax/tree/master/examples) to see the optimizer in action.
+We recommand browsing the [example folder](https://github.com/nestordemeure/AdaHessianJax/tree/main/examples) to see the optimizer in action.
 
 ## TODO
 
 - finish prototype
 - get example working with AdaHessian
+- if we call random twice on the same `rng`, do we get the same output ?
 - test pip instalation
 - use [this readme](https://github.com/davda54/ada-hessian) as inspiration for documentation
 - make PR to add this implementation to list on [AdaHessian repo](https://github.com/amirgholami/adahessian)

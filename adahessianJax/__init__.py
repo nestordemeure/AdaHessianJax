@@ -1,1 +1,2 @@
+from adahessianJax.second_order_optimizer_builder import second_order_optimizer, SecondOrderOptimizer
 from adahessianJax.adahessian import adahessian
