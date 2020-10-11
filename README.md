@@ -42,7 +42,7 @@ The [example folder](https://github.com/nestordemeure/AdaHessianJax/tree/main/ex
 | `weight_decay` (float, optional) | weight decay (L2 penalty) *(default: 0.0)* |
 | `hessian_power` (float, optional) | hessian power *(default: 1.0)* |
 
-Returns a `(init_fun, update_fun, get_params)` triple of functions modeling the optimizer.
+Returns a `(init_fun, update_fun, get_params)` triple of functions modeling the optimizer, similarly to the [jax.experimental.optimizers API](https://jax.readthedocs.io/en/latest/jax.experimental.optimizers.html).
 
 #### `opt_init`
 
@@ -61,7 +61,7 @@ Returns a pytree representing the initial optimizer state, which includes the in
 | `fun`(Callable) | function to be differentiated |
 | `fun_input`(Tuple) | value at which the gradient of `fun` should be evaluated |
 | `opt_state` (pytree) | a pytree representing the optimizer state to be updated |
-| `argnums`(Union[int, Sequence[int]], optional) | specifies which positional argument(s) to differentiate with respect to *(default: 0)* |
+| `argnums`(int, optional) | specifies which positional argument(s) to differentiate with respect to *(default: 0)* |
 
 Returns a pytree with the same structure as the `opt_state` argument representing the updated optimizer state.
 
