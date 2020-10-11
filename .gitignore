@@ -1,6 +1,9 @@
 # personal test file
 test.py
 
+# cuda profiler files
+*.prof
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
