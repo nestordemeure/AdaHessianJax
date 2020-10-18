@@ -18,6 +18,8 @@ This file uses the stax neural network definition library and the optimizers
 optimization library.
 """
 
+import time
+
 import numpy.random as npr
 
 import jax.numpy as jnp
@@ -87,6 +89,7 @@ if __name__ == "__main__":
   input_shape = (224, 224, 3, batch_size)
   step_size = 1e-3
   num_steps = 10
+  num_epochs = 3
 
   init_fun, predict_fun = ResNet50(num_classes)
   _, init_params = init_fun(rng_key, input_shape)
@@ -119,6 +122,11 @@ if __name__ == "__main__":
     return opt_update(i, loss, (params, batch), opt_state)
 
   opt_state = opt_init(init_params, rng_key)
-  for i in range(num_steps):
-    opt_state = update(i, opt_state, next(batches))
+  for epoch in range(num_epochs):
+    start_time = time.time()
+    for i in range(num_steps):
+      opt_state = update(i, opt_state, next(batches))
+    epoch_time = time.time() - start_time
+    print("Epoch {} in {:0.2f} sec".format(epoch, epoch_time))
+
   trained_params = get_params(opt_state)

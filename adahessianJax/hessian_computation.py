@@ -1,6 +1,6 @@
 import numpy
 import jax.numpy as jnp
-from jax import jvp, grad, random
+from jax import jvp, grad, random, dtypes
 from jax.tree_util import tree_map, tree_multimap
 
 def tree_weighted_average_magnitude(tree, weights):
@@ -25,8 +25,11 @@ def make_random_tree(tree, rng):
     we use a normal distribution with a standard deviation of 0.5 as it worked best in our tests
     NOTE: we use the same rng for all random generations but it should not degrade perf as those are independent tensors
     """
-    def make_random_leaf(leaf): return random.rademacher(rng, shape=leaf.shape, dtype=numpy.float32)
-    #def make_random_leaf(leaf): return random.normal(rng, shape=leaf.shape, dtype=numpy.float32)
+    def make_random_leaf(leaf):
+        # waiting for fix on https://github.com/google/jax/issues/4433 as jvp will fail on bool/int types
+        if not jnp.issubdtype(leaf.dtype, jnp.floating): return numpy.zeros(shape=leaf.shape, dtype=dtypes.float0)
+        return random.rademacher(rng, shape=leaf.shape, dtype=leaf.dtype)
+    #def make_random_leaf(leaf): return random.normal(rng, shape=leaf.shape, dtype=leaf.dtype)
     return tree_map(make_random_leaf, tree)
 
 def hessian_vector_product(f, primals, tangents, argnums=0):
