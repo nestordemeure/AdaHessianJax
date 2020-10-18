@@ -11,7 +11,8 @@ def tree_weighted_average_magnitude(tree, weights):
     """
     # def weighted_abs_mean(x, weight): return jnp.mean(jnp.abs(weight * x))
     def weighted_abs_mean(x, weight):
-        result = jnp.abs(weight * x) # TODO test wether the abs is needed
+        result = jnp.abs(weight * x)
+        #result = jnp.abs(x / weight) # proper function when not using rademacher distribution
         if x.ndim <= 1: return result # 1D tensor, no averaging
         if x.ndim <= 3: return jnp.mean(result, axis=[-1], keepdims=True)
         if x.ndim == 4: return jnp.mean(result, axis=[-2, -1], keepdims=True)
@@ -22,11 +23,10 @@ def make_random_tree(tree, rng):
     """
     produces a tree of the same shape as the input tree but were the leafs are sampled from a random distribution with mean zero
     we use a normal distribution with a standard deviation of 0.5 as it worked best in our tests
-    NOTE: we use the same rng for all random generation but it should not degrade perf as those are independent tensors
+    NOTE: we use the same rng for all random generations but it should not degrade perf as those are independent tensors
     """
-    #def make_random_leaf(leaf): return random.rademacher(rng, shape=leaf.shape, dtype=numpy.float32)
-    #def make_random_leaf(leaf): return random.uniform(rng, shape=leaf.shape, dtype=numpy.float32, minval=-1.0, maxval=1.0)
-    def make_random_leaf(leaf): return 0.5 * random.normal(rng, shape=leaf.shape, dtype=numpy.float32)
+    def make_random_leaf(leaf): return random.rademacher(rng, shape=leaf.shape, dtype=numpy.float32)
+    #def make_random_leaf(leaf): return random.normal(rng, shape=leaf.shape, dtype=numpy.float32)
     return tree_map(make_random_leaf, tree)
 
 def hessian_vector_product(f, primals, tangents, argnums=0):

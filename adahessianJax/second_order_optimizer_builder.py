@@ -25,14 +25,15 @@ RngKey = Any
 SecondOrderInitFn = Callable[[Params, RngKey], OptimizerState]
 SecondOrderUpdateFn = Callable[[Step, Updates, Updates, OptimizerState], OptimizerState]
 class SecondOrderOptimizer(NamedTuple):
+    "Stores the triplet of function defining a second order optimizer"
     init_fn: SecondOrderInitFn
     update_fn: SecondOrderUpdateFn
     params_fn: ParamsFn
 
 def second_order_optimizer(opt_maker: Callable[...,
-    Tuple[Callable[[Params, RngKey], State],
-          Callable[[Step, Updates, Updates, Params], Params],
-          Callable[[State], Params]]]) -> Callable[..., Optimizer]:
+                                               Tuple[Callable[[Params, RngKey], State],
+                                                     Callable[[Step, Updates, Updates, Params], Params],
+                                                     Callable[[State], Params]]]) -> Callable[..., Optimizer]:
     """Decorator to make an optimizer defined for arrays generalize to containers.
     With this decorator, you can write init, update, and get_params functions that
     each operate only on single arrays, and convert them to corresponding
@@ -47,7 +48,7 @@ def second_order_optimizer(opt_maker: Callable[...,
         def tree_init(x0_tree, rng):
             "takes the network paramaters plus a Jax random generator key"
             x0_flat, tree = tree_flatten(x0_tree)
-            initial_states = [init(x0) for x0 in x0_flat]
+            initial_states = [init(x0, rng) for x0 in x0_flat]
             states_flat, subtrees = unzip2(safe_map(tree_flatten, initial_states))
             return SecondOrderOptimizerState(states_flat, tree, subtrees, rng)
 
@@ -74,7 +75,7 @@ def second_order_optimizer(opt_maker: Callable[...,
 
         @wraps(get_params)
         def tree_get_params(opt_state):
-            states_flat, tree, subtrees, rng = opt_state
+            states_flat, tree, subtrees, _rng = opt_state
             states = safe_map(tree_unflatten, subtrees, states_flat)
             params = safe_map(get_params, states)
             return tree_unflatten(tree, params)
