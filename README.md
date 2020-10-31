@@ -2,7 +2,7 @@
 
 [Jax](https://github.com/google/jax) and [Flax](https://github.com/google/flax) implementations of the [AdaHessian optimizer](https://github.com/amirgholami/adahessian), a second order optimizer for neural networks.
 
-## installation
+## Installation
 
 You can install this librarie with:
 
@@ -10,7 +10,7 @@ You can install this librarie with:
 pip install git+https://github.com/nestordemeure/AdaHessianJax.git
 ```
 
-## Using with Jax
+## Using AdaHessian with Jax
 
 The implementation provides both a fast way to evaluate the diagonal of the hessian of a program and an optimizer API that stays close to [jax.experimental.optimizers](https://jax.readthedocs.io/en/latest/jax.experimental.optimizers.html) in the `adahessianJax.jax` namespace:
 
@@ -35,7 +35,7 @@ opt_state = opt_update(i, gradient, hessian, opt_state)
 
 The [example folder](https://github.com/nestordemeure/AdaHessianJax/tree/main/examples) contains JAX's MNIST classification example updated to be run with Adam or AdaHessian in order to compare both implementations.
 
-## Using with Flax
+## Using AdaHessian with Flax
 
 The implementation provides both a fast way to evaluate the diagonal of the hessian of a program and an optimizer API that stays close to [Flax optimizers](https://flax.readthedocs.io/en/latest/flax.optim.html) in the `adahessianJax.flax` namespace:
 
