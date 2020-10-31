@@ -26,7 +26,7 @@ import itertools
 import numpy.random as npr
 
 import jax.numpy as jnp
-from jax import jit, grad, random, profiler
+from jax import jit, grad, random
 from jax.experimental import optimizers
 from jax.experimental import stax
 from jax.experimental.stax import Dense, Relu, LogSoftmax
@@ -95,6 +95,3 @@ if __name__ == "__main__":
     print("Epoch {} in {:0.2f} sec".format(epoch, epoch_time))
     print("Training set accuracy {}".format(train_acc))
     print("Test set accuracy {}".format(test_acc))
-  
-  # display informations with: pprof --web memory.prof
-  #profiler.save_device_memory_profile("memory.prof")

@@ -31,7 +31,8 @@ from jax.experimental import stax
 from jax.experimental.stax import Dense, Relu, LogSoftmax
 
 import datasets
-from adahessianJax import adahessian, grad_and_hessian
+from adahessianJax import grad_and_hessian
+from adahessianJax.jax import adahessian
 
 def loss(params, batch):
     inputs, targets = batch

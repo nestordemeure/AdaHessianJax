@@ -1,7 +1,7 @@
 import jax.numpy as jnp
 from jax.experimental.optimizers import make_schedule
 
-from adahessianJax.second_order_optimizer_builder import second_order_optimizer
+from .second_order_optimizer_builder import second_order_optimizer
 
 @second_order_optimizer
 def adahessian(step_size=1e-1, b1=0.9, b2=0.999, eps=1e-8, weight_decay=0.0, hessian_power=1):

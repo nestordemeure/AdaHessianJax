@@ -13,7 +13,9 @@ pip install git+https://github.com/nestordemeure/AdaHessianJax.git
 The implementation provides both a fast way to evaluate the diagonal of the hessian of a program and an optimizer API that stays close to [jax.experimental.optimizers](https://jax.readthedocs.io/en/latest/jax.experimental.optimizers.html):
 
 ```python
-from adahessianJax import adahessian, grad_and_hessian
+# gets the jax.experimental.optimizers version of the optimizer
+from adahessianJax.jax import adahessian
+from adahessianJax import grad_and_hessian
 
 # builds an optimizer triplet, no need to pass a learning rate
 opt_init, opt_update, get_params = adahessian()
