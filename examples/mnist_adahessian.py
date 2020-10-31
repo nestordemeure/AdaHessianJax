@@ -31,7 +31,7 @@ from jax.experimental import stax
 from jax.experimental.stax import Dense, Relu, LogSoftmax
 
 import datasets
-from adahessianJax import adahessian
+from adahessianJax import adahessian, grad_and_hessian
 
 def loss(params, batch):
     inputs, targets = batch
@@ -74,20 +74,22 @@ if __name__ == "__main__":
     opt_init, opt_update, get_params = adahessian()
 
     @jit
-    def update(i, opt_state, batch):
+    def update(i, opt_state, batch, rng):
         params = get_params(opt_state)
-        return opt_update(i, loss, (params, batch), opt_state)
+        gradient, hessian = grad_and_hessian(loss, (params, batch), rng)
+        return opt_update(i, gradient, hessian, opt_state)
 
-    rng_param, rng_optimizer = random.split(rng)
+    rng, rng_param = random.split(rng)
     _, init_params = init_random_params(rng_param, (-1, 28 * 28))
-    opt_state = opt_init(init_params, rng_optimizer)
+    opt_state = opt_init(init_params)
     itercount = itertools.count()
 
     print("\nStarting training...")
     for epoch in range(num_epochs):
         start_time = time.time()
         for _ in range(num_batches):
-          opt_state = update(next(itercount), opt_state, next(batches))
+          rng, rng_step = random.split(rng)
+          opt_state = update(next(itercount), opt_state, next(batches), rng_step)
         epoch_time = time.time() - start_time
 
         params = get_params(opt_state)

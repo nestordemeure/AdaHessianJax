@@ -51,7 +51,7 @@ def _gradient_and_hessian_vector_product(f, primals, tangents, argnums=0):
     (gradient, hessian_vector_prod) = jvp(grad(f, argnums=argnums), primals, tangents)
     return gradient, hessian_vector_prod
 
-def grad_and_hessian(f, x, rng, argnums=0, average_magnitude=True):
+def grad_and_hessian(f, x, rng, argnum=0, average_magnitude=True):
     """
     Uses Hutchinson's randomized algorithm to estimate the absolute value of the diagonal of the hessian of f in x where x is expected to be a tuple
     (you can pass something of the form (x,) to signify a one element tuple).
@@ -62,7 +62,7 @@ def grad_and_hessian(f, x, rng, argnums=0, average_magnitude=True):
     If `average_magnitude` is set to False, returns a raw estimation of the diagonal of the hessian.
     """
     random_vector = _make_random_tree(x, rng)
-    gradient, hessian_vector_prod = _gradient_and_hessian_vector_product(f, x, random_vector, argnums=argnums)
+    gradient, hessian_vector_prod = _gradient_and_hessian_vector_product(f, x, random_vector, argnums=argnum)
     # as abs(+-1*x) = abs(x), we do not multiply by random_vector when computing average_magnitude
     hessian = _tree_average_magnitude(hessian_vector_prod) if average_magnitude else _tree_product(random_vector[argnums],hessian_vector_prod)
     return gradient, hessian
@@ -79,7 +79,7 @@ def _value_gradient_and_hessian_vector_product(f, primals, tangents, argnums=0):
     ((value, gradient), (_,hessian_vector_prod)) = jvp(value_and_grad(f, argnums=argnums), primals, tangents)
     return value, gradient, hessian_vector_prod
 
-def value_grad_and_hessian(f, x, rng, argnums=0, average_magnitude=True):
+def value_grad_and_hessian(f, x, rng, argnum=0, average_magnitude=True):
     """
     Uses Hutchinson's randomized algorithm to estimate the absolute value of the diagonal of the hessian of f in x where x is expected to be a tuple
     (you can pass something of the form (x,) to signify a one element tuple).
@@ -90,7 +90,7 @@ def value_grad_and_hessian(f, x, rng, argnums=0, average_magnitude=True):
     If `average_magnitude` is set to False, returns a raw estimation of the diagonal of the hessian.
     """
     random_vector = _make_random_tree(x, rng)
-    value, gradient, hessian_vector_prod = _value_gradient_and_hessian_vector_product(f, x, random_vector, argnums=argnums)
+    value, gradient, hessian_vector_prod = _value_gradient_and_hessian_vector_product(f, x, random_vector, argnums=argnum)
     # as abs(+-1*x) = abs(x), we do not multiply by random_vector when computing average_magnitude
     hessian = _tree_average_magnitude(hessian_vector_prod) if average_magnitude else _tree_product(random_vector[argnums],hessian_vector_prod)
     return value, gradient, hessian

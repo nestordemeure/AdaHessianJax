@@ -28,7 +28,7 @@ from jax.experimental import stax
 from jax.experimental.stax import (AvgPool, BatchNorm, Conv, Dense, FanInSum,
                                    FanOut, Flatten, GeneralConv, Identity,
                                    MaxPool, Relu, LogSoftmax)
-from adahessianJax import adahessian
+from adahessianJax import adahessian, grad_and_hessian
 
 # ResNet blocks compose other layers
 
@@ -82,7 +82,7 @@ def ResNet50(num_classes):
 
 
 if __name__ == "__main__":
-  rng_key = random.PRNGKey(0)
+  rng = random.PRNGKey(0)
 
   batch_size = 8
   num_classes = 1001
@@ -92,7 +92,7 @@ if __name__ == "__main__":
   num_epochs = 3
 
   init_fun, predict_fun = ResNet50(num_classes)
-  _, init_params = init_fun(rng_key, input_shape)
+  _, init_params = init_fun(rng, input_shape)
 
   def loss(params, batch):
     inputs, targets = batch
@@ -117,15 +117,17 @@ if __name__ == "__main__":
   batches = synth_batches()
 
   @jit
-  def update(i, opt_state, batch):
+  def update(i, opt_state, batch, rng):
     params = get_params(opt_state)
-    return opt_update(i, loss, (params, batch), opt_state)
+    gradient, hessian = grad_and_hessian(loss, (params, batch), rng)
+    return opt_update(i, gradient, hessian, opt_state)
 
-  opt_state = opt_init(init_params, rng_key)
+  opt_state = opt_init(init_params)
   for epoch in range(num_epochs):
     start_time = time.time()
     for i in range(num_steps):
-      opt_state = update(i, opt_state, next(batches))
+      rng, rng_step = random.split(rng)
+      opt_state = update(i, opt_state, next(batches), rng_step)
     epoch_time = time.time() - start_time
     print("Epoch {} in {:0.2f} sec".format(epoch, epoch_time))
 

@@ -10,21 +10,23 @@ You can install this librarie with:
 pip install git+https://github.com/nestordemeure/AdaHessianJax.git
 ```
 
-The implementation tries to stay close to [jax.experimental.optimizers](https://jax.readthedocs.io/en/latest/jax.experimental.optimizers.html) but introduces some modifications due to the need for both randomness and access to the gradient computation:
+The implementation provides both a fast way to evaluate the diagonal of the hessian of a program and an optimizer API that stays close to [jax.experimental.optimizers](https://jax.readthedocs.io/en/latest/jax.experimental.optimizers.html):
 
 ```python
-from adahessianJax import adahessian
+from adahessianJax import adahessian, grad_and_hessian
 
 # builds an optimizer triplet, no need to pass a learning rate
 opt_init, opt_update, get_params = adahessian()
 
-# generates initial state using network parameters AND a Jax random generator key
+# generates initial state using network parameters
+opt_state = opt_init(init_params)
 rng = numpy.random.RandomState(0)
-opt_state = opt_init(init_params, rng)
 
-# uses the optimizer, note that we pass the loss and its input instead of the gradient to let adahessian do the computation itself
+# uses the optimizer, note that we pass the gradient AND a hessian
 params = get_params(opt_state)
-opt_state = opt_update(i, loss, (params, batch), opt_state)
+rng, rng_step = jax.random.split(rng)
+gradient, hessian = grad_and_hessian(loss, (params, batch), rng_step)
+opt_state = opt_update(i, gradient, hessian, opt_state)
 ```
 
 The [example folder](https://github.com/nestordemeure/AdaHessianJax/tree/main/examples) contains JAX's MNIST classification example updated to be run with Adam or AdaHessian in order to compare both implementations.
@@ -43,32 +45,30 @@ The [example folder](https://github.com/nestordemeure/AdaHessianJax/tree/main/ex
 | `hessian_power` (float, optional) | hessian power *(default: 1.0)* |
 
 Returns a `(init_fun, update_fun, get_params)` triple of functions modeling the optimizer, similarly to the [jax.experimental.optimizers API](https://jax.readthedocs.io/en/latest/jax.experimental.optimizers.html).
+The only difference is that `update_fun` takes both a gradient *and* a hessian parameter.
 
-#### `opt_init`
-
-| **Argument** | **Description** |
-| :-------------- | :-------------- |
-| `params` (pytree) | pytree representing the initial parameters |
-| `rng`(ndarray) | a PRNGKey used as the random key |
-
-Returns a pytree representing the initial optimizer state, which includes the initial parameters and auxiliary values like initial momentum and pseudo random number generator state.
-
-#### `opt_update`
+#### `grad_and_hessian`
 
 | **Argument** | **Description** |
 | :-------------- | :-------------- |
-| `step` (int) | integer representing the step index |
 | `fun`(Callable) | function to be differentiated |
-| `fun_input`(Tuple) | value at which the gradient of `fun` should be evaluated |
-| `opt_state` (pytree) | a pytree representing the optimizer state to be updated |
-| `argnums`(int, optional) | specifies which positional argument(s) to differentiate with respect to *(default: 0)* |
+| `fun_input`(Tuple) | value at which the gradient and hessian of `fun` should be evaluated |
+| `rng`(ndarray) | a PRNGKey used as the random key |
+| `argnum`(int, optional) | specifies which positional argument to differentiate with respect to *(default: 0)* |
+| `average_magnitude`(bool, optional) | if set to true, will return the *absolute value* of the hessian *averaged* over parameters following the Adahessian paper *(default: True)* |
 
-Returns a pytree with the same structure as the `opt_state` argument representing the updated optimizer state.
+Returns a pair `(gradient, hessian)` where the first element is the gradient of `fun` evaluated in `fun_input` and the second element is the diagonal of its hessian.
+By default it will return the absolute value of the hessian averaged over a subset of the parameters but setting `average_magnitude` to False will ensure that raw values are used instead.
 
-#### `get_params`
+#### `value_grad_and_hessian`
 
 | **Argument** | **Description** |
 | :-------------- | :-------------- |
-| `opt_state` (pytree) | pytree representing an optimizer state |
+| `fun`(Callable) | function to be differentiated |
+| `fun_input`(Tuple) | value at which the gradient and hessian of `fun` should be evaluated |
+| `rng`(ndarray) | a PRNGKey used as the random key |
+| `argnum`(int, optional) | specifies which positional argument to differentiate with respect to *(default: 0)* |
+| `average_magnitude`(bool, optional) | if set to true, will return the *absolute value* of the hessian *averaged* over parameters following the Adahessian paper *(default: True)* |
 
-Returns a pytree representing the parameters extracted from `opt_state`.
+Returns a triplet `(value, gradient, hessian)` where the first element is the value of `fun` evaluated in `fun_input`, the second element is its gradient and the third element is the diagonal of its hessian.
+By default it will return the absolute value of the hessian averaged over a subset of the parameters but setting `average_magnitude` to False will ensure that raw values are used instead.
