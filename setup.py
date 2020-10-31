@@ -12,7 +12,7 @@ setup(
     url = 'https://github.com/nestordemeure/AdaHessianJax',
     # download_url = 'https://github.com/nestordemeure/AdaHessianJax/archive/v?.?.tar.gz',
     keywords = ['deep-learning', 'jax', 'optimizer'],
-    install_requires=['jax'],
+    install_requires=['jax', 'flax'],
     classifiers=[ # https://pypi.org/classifiers/
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',

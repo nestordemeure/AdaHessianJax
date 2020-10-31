@@ -12,7 +12,7 @@ class SecondOrderOptimizer(Optimizer):
         new_target, new_state = self.optimizer_def.apply_gradient(hyper_params, self.target, self.state, grads, hessians)
         return self.replace(target=new_target, state=new_state)
 
-class AdaHessian(Adam):
+class Adahessian(Adam):
     """like adam but uses a hessian approximation instead of the square of the gradient"""
     def apply_param_gradient(self, step, hyper_params, param, state, grad, hessian):
         assert hyper_params.learning_rate is not None, 'no learning rate provided.'

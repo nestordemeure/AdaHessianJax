@@ -1,8 +1,8 @@
 # AdaHessian on Jax
 
-[Jax](https://github.com/google/jax) implementation of the [AdaHessian optimizer](https://github.com/amirgholami/adahessian), a second order optimizer for neural networks.
+[Jax](https://github.com/google/jax) and [Flax](https://github.com/google/flax) implementations of the [AdaHessian optimizer](https://github.com/amirgholami/adahessian), a second order optimizer for neural networks.
 
-## Usage
+## Instalation
 
 You can install this librarie with:
 
@@ -10,7 +10,9 @@ You can install this librarie with:
 pip install git+https://github.com/nestordemeure/AdaHessianJax.git
 ```
 
-The implementation provides both a fast way to evaluate the diagonal of the hessian of a program and an optimizer API that stays close to [jax.experimental.optimizers](https://jax.readthedocs.io/en/latest/jax.experimental.optimizers.html):
+## Using with Jax
+
+The implementation provides both a fast way to evaluate the diagonal of the hessian of a program and an optimizer API that stays close to [jax.experimental.optimizers](https://jax.readthedocs.io/en/latest/jax.experimental.optimizers.html) in the `adahessianJax.jax` namespace:
 
 ```python
 # gets the jax.experimental.optimizers version of the optimizer
@@ -20,7 +22,7 @@ from adahessianJax import grad_and_hessian
 # builds an optimizer triplet, no need to pass a learning rate
 opt_init, opt_update, get_params = adahessian()
 
-# generates initial state using network parameters
+# initialize the optimizer with the initial value of the parameters to optimize
 opt_state = opt_init(init_params)
 rng = numpy.random.RandomState(0)
 
@@ -33,9 +35,32 @@ opt_state = opt_update(i, gradient, hessian, opt_state)
 
 The [example folder](https://github.com/nestordemeure/AdaHessianJax/tree/main/examples) contains JAX's MNIST classification example updated to be run with Adam or AdaHessian in order to compare both implementations.
 
+## Using with Flax
+
+The implementation provides both a fast way to evaluate the diagonal of the hessian of a program and an optimizer API that stays close to [Flax optimizers](https://flax.readthedocs.io/en/latest/flax.optim.html) in the `adahessianJax.flax` namespace:
+
+```python
+# gets the flax version of the optimizer
+from adahessianJax.flax import Adahessian
+from adahessianJax import grad_and_hessian
+
+# defines the optimizer, learning_rate is not optional
+optimizer_def = Adahessian(learning_rate=1e-3)
+
+# initialize the optimizer with the initial value of the parameters to optimize
+optimizer = optimizer_def.create(init_params)
+rng = numpy.random.RandomState(0)
+
+# uses the optimizer, note that we pass the gradient AND a hessian
+params = optimizer.target
+rng, rng_step = jax.random.split(rng)
+gradient, hessian = grad_and_hessian(loss, (params, batch), rng_step)
+optimizer = optimizer.apply_gradient(gradient, hessian)
+```
+
 ## Documentation
 
-#### `adahessian`
+#### `jax.adahessian`
 
 | **Argument** | **Description** |
 | :-------------- | :-------------- |
@@ -48,6 +73,19 @@ The [example folder](https://github.com/nestordemeure/AdaHessianJax/tree/main/ex
 
 Returns a `(init_fun, update_fun, get_params)` triple of functions modeling the optimizer, similarly to the [jax.experimental.optimizers API](https://jax.readthedocs.io/en/latest/jax.experimental.optimizers.html).
 The only difference is that `update_fun` takes both a gradient *and* a hessian parameter.
+
+#### `flax.Adahessian`
+
+| **Argument** | **Description** |
+| :-------------- | :-------------- |
+| `learning_rate` (float) | learning rate |
+| `beta1`(float, optional) | the exponential decay rate for the first moment estimates *(default: 0.9)* |
+| `beta2`(float, optional) | the exponential decay rate for the squared hessian estimates *(default: 0.999)* |
+| `eps` (float, optional) | term added to the denominator to improve numerical stability *(default: 1e-8)* |
+| `weight_decay` (float, optional) | weight decay (L2 penalty) *(default: 0.0)* |
+
+Returns an optimizer definition, similarly to the [Flax optimizers API](https://flax.readthedocs.io/en/latest/flax.optim.html).
+The only difference is that `apply_gradient` takes both a gradient *and* a hessian parameter.
 
 #### `grad_and_hessian`
 

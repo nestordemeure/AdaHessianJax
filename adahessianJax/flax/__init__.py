@@ -1,3 +1,3 @@
-from adahessianJax.flax.adahessian import SecondOrderOptimizer, AdaHessian
+from adahessianJax.flax.adahessian import SecondOrderOptimizer, Adahessian
 
-__all__ = ['AdaHessian', 'SecondOrderOptimizer']
+__all__ = ['Adahessian', 'SecondOrderOptimizer']
