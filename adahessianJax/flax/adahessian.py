@@ -4,6 +4,7 @@ import numpy as onp
 from flax import struct
 from flax.optim.adam import _AdamParamState
 
+from adahessianJax.hessian_computation import average_magnitude
 from .second_order_optimizer_builder import SecondOrderOptimizerDef
 
 @struct.dataclass
@@ -40,9 +41,11 @@ class Adahessian(SecondOrderOptimizerDef):
         beta1 = hyper_params.beta1
         beta2 = hyper_params.beta2
         weight_decay = hyper_params.weight_decay
-        grad_sq = jax.lax.square(hessian)
+
+        hessian = average_magnitude(hessian)
+        hessian_sq = jax.lax.square(hessian)
         grad_ema = beta1 * state.grad_ema + (1. - beta1) * grad
-        grad_sq_ema = beta2 * state.grad_sq_ema + (1. - beta2) * grad_sq
+        grad_sq_ema = beta2 * state.grad_sq_ema + (1. - beta2) * hessian_sq
 
         # bias correction
         t = step + 1.

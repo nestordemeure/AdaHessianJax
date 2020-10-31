@@ -96,10 +96,8 @@ The only difference is that `apply_gradient` takes both a gradient *and* a hessi
 | `fun_input`(Tuple) | value at which the gradient and hessian of `fun` should be evaluated |
 | `rng`(ndarray) | a PRNGKey used as the random key |
 | `argnum`(int, optional) | specifies which positional argument to differentiate with respect to *(default: 0)* |
-| `average_magnitude`(bool, optional) | if set to true, will return the *absolute value* of the hessian *averaged* over parameters following the Adahessian paper *(default: True)* |
 
 Returns a pair `(gradient, hessian)` where the first element is the gradient of `fun` evaluated in `fun_input` and the second element is the diagonal of its hessian.
-By default it will return the absolute value of the hessian averaged over a subset of the parameters but setting `average_magnitude` to False will ensure that raw values are used instead.
 
 This function expects `fun_input` to be a tuple and will fail otherwise.
 One can pass `(fun_input,)` if `fun` has a single input that is not already a tuple.
@@ -112,10 +110,8 @@ One can pass `(fun_input,)` if `fun` has a single input that is not already a tu
 | `fun_input`(Tuple) | value at which the gradient and hessian of `fun` should be evaluated |
 | `rng`(ndarray) | a PRNGKey used as the random key |
 | `argnum`(int, optional) | specifies which positional argument to differentiate with respect to *(default: 0)* |
-| `average_magnitude`(bool, optional) | if set to true, will return the *absolute value* of the hessian *averaged* over parameters following the Adahessian paper *(default: True)* |
 
 Returns a triplet `(value, gradient, hessian)` where the first element is the value of `fun` evaluated in `fun_input`, the second element is its gradient and the third element is the diagonal of its hessian.
-By default it will return the absolute value of the hessian averaged over a subset of the parameters but setting `average_magnitude` to False will ensure that raw values are used instead.
 
 This function expects `fun_input` to be a tuple and will fail otherwise.
 One can pass `(fun_input,)` if `fun` has a single input that is not already a tuple.
