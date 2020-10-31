@@ -2,7 +2,7 @@
 
 [Jax](https://github.com/google/jax) and [Flax](https://github.com/google/flax) implementations of the [AdaHessian optimizer](https://github.com/amirgholami/adahessian), a second order optimizer for neural networks.
 
-## Instalation
+## installation
 
 You can install this librarie with:
 
