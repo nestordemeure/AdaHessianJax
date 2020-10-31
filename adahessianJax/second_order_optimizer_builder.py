@@ -58,7 +58,7 @@ def second_order_optimizer(opt_maker: Callable[...,
             states_flat, tree_opt_state, subtrees, rng = opt_state
             rng, rng_hessian = random.split(rng)
             # computes gradient and hessian
-            grad_tree, hessian_tree = grad_and_hessian(loss, loss_input, rng_hessian, argnums=argnums)
+            grad_tree, hessian_tree = grad_and_hessian(loss, loss_input, rng_hessian, argnums=argnums, average_magnitude=False)
             # flattens trees
             grad_flat, _ = tree_flatten(grad_tree)
             hessian_flat, _ = tree_flatten(hessian_tree)
