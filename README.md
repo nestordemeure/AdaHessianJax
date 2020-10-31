@@ -44,8 +44,8 @@ The implementation provides both a fast way to evaluate the diagonal of the hess
 from adahessianJax.flax import Adahessian
 from adahessianJax import grad_and_hessian
 
-# defines the optimizer, learning_rate is not optional
-optimizer_def = Adahessian(learning_rate=1e-3)
+# defines the optimizer, no need to pass a learning rate
+optimizer_def = Adahessian()
 
 # initialize the optimizer with the initial value of the parameters to optimize
 optimizer = optimizer_def.create(init_params)
@@ -78,11 +78,12 @@ The only difference is that `update_fun` takes both a gradient *and* a hessian p
 
 | **Argument** | **Description** |
 | :-------------- | :-------------- |
-| `learning_rate` (float) | learning rate |
+| `learning_rate` (float, optional) | learning rate *(default: 1e-3)* |
 | `beta1`(float, optional) | the exponential decay rate for the first moment estimates *(default: 0.9)* |
 | `beta2`(float, optional) | the exponential decay rate for the squared hessian estimates *(default: 0.999)* |
 | `eps` (float, optional) | term added to the denominator to improve numerical stability *(default: 1e-8)* |
 | `weight_decay` (float, optional) | weight decay (L2 penalty) *(default: 0.0)* |
+| `hessian_power` (float, optional) | hessian power *(default: 1.0)* |
 
 Returns an optimizer definition, similarly to the [Flax optimizers API](https://flax.readthedocs.io/en/latest/flax.optim.html).
 The only difference is that `apply_gradient` takes both a gradient *and* a hessian parameter.
