@@ -61,6 +61,7 @@ def grad_and_hessian(f, x, rng, argnum=0, average_magnitude=True):
     Returns the gradient and an estimation of the absolute value of the diagonal of the hessian averaged over tensors.
     If `average_magnitude` is set to False, returns a raw estimation of the diagonal of the hessian.
     """
+    if not isinstance(x, tuple): raise ValueError(f'Function input must be a tuple but is a {type(x)}, you might want to wrap your input as `(input,)` instead of `x`.')
     random_vector = _make_random_tree(x, rng)
     gradient, hessian_vector_prod = _gradient_and_hessian_vector_product(f, x, random_vector, argnums=argnum)
     # as abs(+-1*x) = abs(x), we do not multiply by random_vector when computing average_magnitude
@@ -89,6 +90,7 @@ def value_grad_and_hessian(f, x, rng, argnum=0, average_magnitude=True):
     Returns the value, the gradient and an estimation of the absolute value of the diagonal of the hessian averaged over tensors.
     If `average_magnitude` is set to False, returns a raw estimation of the diagonal of the hessian.
     """
+    if not isinstance(x, tuple): raise ValueError(f'Function input must be a tuple but is a {type(x)}, you might want to wrap your input as `(input,)` instead of `x`.')
     random_vector = _make_random_tree(x, rng)
     value, gradient, hessian_vector_prod = _value_gradient_and_hessian_vector_product(f, x, random_vector, argnums=argnum)
     # as abs(+-1*x) = abs(x), we do not multiply by random_vector when computing average_magnitude

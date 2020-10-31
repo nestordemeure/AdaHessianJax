@@ -1,5 +1,6 @@
-# personal test file
-test.py
+# personal test files
+test_jax.py
+test_flax.py
 
 # cuda profiler files
 *.prof
