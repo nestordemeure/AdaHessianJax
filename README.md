@@ -61,7 +61,7 @@ Returns a pair `(gradient, hessian)` where the first element is the gradient of 
 By default it will return the absolute value of the hessian averaged over a subset of the parameters but setting `average_magnitude` to False will ensure that raw values are used instead.
 
 This function expects `fun_input` to be a tuple and will fail otherwise.
-One can pass `(fun_input,)` if the function has a single input that is not already a tuple.
+One can pass `(fun_input,)` if `fun` has a single input that is not already a tuple.
 
 #### `value_grad_and_hessian`
 
@@ -77,4 +77,4 @@ Returns a triplet `(value, gradient, hessian)` where the first element is the va
 By default it will return the absolute value of the hessian averaged over a subset of the parameters but setting `average_magnitude` to False will ensure that raw values are used instead.
 
 This function expects `fun_input` to be a tuple and will fail otherwise.
-One can pass `(fun_input,)` if the function has a single input that is not already a tuple.
+One can pass `(fun_input,)` if `fun` has a single input that is not already a tuple.
