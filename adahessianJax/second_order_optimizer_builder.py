@@ -11,7 +11,7 @@ from jax.util import partial, unzip2, safe_zip, safe_map
 from jax.tree_util import tree_flatten, tree_unflatten, register_pytree_node
 from jax.experimental.optimizers import Step, Updates, OptimizerState, ParamsFn, Params, State, Optimizer
 
-from adahessianJax.hessian_computation import hutchinson_grad_and_hessian
+from adahessianJax.hessian_computation import grad_and_hessian
 
 # stores the optimizer's information
 SecondOrderOptimizerState = namedtuple("OptimizerState", ["packed_state", "tree_def", "subtree_defs", "rng"])
@@ -58,7 +58,7 @@ def second_order_optimizer(opt_maker: Callable[...,
             states_flat, tree_opt_state, subtrees, rng = opt_state
             rng, rng_hessian = random.split(rng)
             # computes gradient and hessian
-            grad_tree, hessian_tree = hutchinson_grad_and_hessian(loss, loss_input, rng_hessian, argnums=argnums)
+            grad_tree, hessian_tree = grad_and_hessian(loss, loss_input, rng_hessian, argnums=argnums)
             # flattens trees
             grad_flat, _ = tree_flatten(grad_tree)
             hessian_flat, _ = tree_flatten(hessian_tree)

@@ -24,7 +24,7 @@ opt_state = opt_init(init_params, rng)
 
 # uses the optimizer, note that we pass the loss and its input instead of the gradient to let adahessian do the computation itself
 params = get_params(opt_state)
-opt_update(i, loss, (params, batch), opt_state)
+opt_state = opt_update(i, loss, (params, batch), opt_state)
 ```
 
 The [example folder](https://github.com/nestordemeure/AdaHessianJax/tree/main/examples) contains JAX's MNIST classification example updated to be run with Adam or AdaHessian in order to compare both implementations.
