@@ -60,6 +60,9 @@ The only difference is that `update_fun` takes both a gradient *and* a hessian p
 Returns a pair `(gradient, hessian)` where the first element is the gradient of `fun` evaluated in `fun_input` and the second element is the diagonal of its hessian.
 By default it will return the absolute value of the hessian averaged over a subset of the parameters but setting `average_magnitude` to False will ensure that raw values are used instead.
 
+This function expects `fun_input` to be a tuple and will fail otherwise.
+One can pass `(fun_input,)` if the function has a single input that is not already a tuple.
+
 #### `value_grad_and_hessian`
 
 | **Argument** | **Description** |
@@ -72,3 +75,6 @@ By default it will return the absolute value of the hessian averaged over a subs
 
 Returns a triplet `(value, gradient, hessian)` where the first element is the value of `fun` evaluated in `fun_input`, the second element is its gradient and the third element is the diagonal of its hessian.
 By default it will return the absolute value of the hessian averaged over a subset of the parameters but setting `average_magnitude` to False will ensure that raw values are used instead.
+
+This function expects `fun_input` to be a tuple and will fail otherwise.
+One can pass `(fun_input,)` if the function has a single input that is not already a tuple.
