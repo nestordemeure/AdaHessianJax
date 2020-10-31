@@ -1,4 +1,4 @@
-# AdaHessian on Jax
+# AdaHessian optimizer for Jax and Flax
 
 [Jax](https://github.com/google/jax) and [Flax](https://github.com/google/flax) implementations of the [AdaHessian optimizer](https://github.com/amirgholami/adahessian), a second order optimizer for neural networks.
 
