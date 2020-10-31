@@ -64,7 +64,7 @@ def grad_and_hessian(f, x, rng, argnum=0, average_magnitude=True):
     random_vector = _make_random_tree(x, rng)
     gradient, hessian_vector_prod = _gradient_and_hessian_vector_product(f, x, random_vector, argnums=argnum)
     # as abs(+-1*x) = abs(x), we do not multiply by random_vector when computing average_magnitude
-    hessian = _tree_average_magnitude(hessian_vector_prod) if average_magnitude else _tree_product(random_vector[argnums],hessian_vector_prod)
+    hessian = _tree_average_magnitude(hessian_vector_prod) if average_magnitude else _tree_product(random_vector[argnum],hessian_vector_prod)
     return gradient, hessian
 
 #--------------------------------------------------------------------------------------------------
@@ -92,5 +92,5 @@ def value_grad_and_hessian(f, x, rng, argnum=0, average_magnitude=True):
     random_vector = _make_random_tree(x, rng)
     value, gradient, hessian_vector_prod = _value_gradient_and_hessian_vector_product(f, x, random_vector, argnums=argnum)
     # as abs(+-1*x) = abs(x), we do not multiply by random_vector when computing average_magnitude
-    hessian = _tree_average_magnitude(hessian_vector_prod) if average_magnitude else _tree_product(random_vector[argnums],hessian_vector_prod)
+    hessian = _tree_average_magnitude(hessian_vector_prod) if average_magnitude else _tree_product(random_vector[argnum],hessian_vector_prod)
     return value, gradient, hessian
