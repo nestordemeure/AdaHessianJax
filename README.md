@@ -24,7 +24,7 @@ opt_init, opt_update, get_params = adahessian()
 
 # initialize the optimizer with the initial value of the parameters to optimize
 opt_state = opt_init(init_params)
-rng = numpy.random.RandomState(0)
+rng = jax.random.PRNGKey(0)
 
 # uses the optimizer, note that we pass the gradient AND a hessian
 params = get_params(opt_state)
@@ -49,7 +49,7 @@ optimizer_def = Adahessian()
 
 # initialize the optimizer with the initial value of the parameters to optimize
 optimizer = optimizer_def.create(init_params)
-rng = numpy.random.RandomState(0)
+rng = jax.random.PRNGKey(0)
 
 # uses the optimizer, note that we pass the gradient AND a hessian
 params = optimizer.target

@@ -2,6 +2,9 @@
 test_jax.py
 test_flax.py
 
+# local install file
+adahessianJax.egg-info/
+
 # cuda profiler files
 *.prof
 
