@@ -1,6 +1,7 @@
 import abc
+from typing import Any
 import jax
-from flax import struct
+from flax import struct, serialization
 from flax.optim import OptimizerState, OptimizerDef, Optimizer
 
 class SecondOrderOptimizerDef(OptimizerDef):
@@ -61,11 +62,12 @@ class SecondOrderOptimizerDef(OptimizerDef):
         state = opt_def.init_state(target)
         return SecondOrderOptimizer(opt_def, state, target)
 
-@struct.dataclass
 class SecondOrderOptimizer(Optimizer):
-    """Wraps an optimizer with its hyper_params, state, and model parameters.
-    This particular version forwards a hessian.
     """
+    Wraps a `SecondOrderOptimizerDef` like the `Optimizer` class but forwards a hessian in the `apply_gradient` method
+    derived from: https://github.com/google/flax/blob/748f7a386828b80df5159d8c606a3cfe52c77b0a/flax/optim/base.py#L177
+    """
+
     def apply_gradient(self, grads, hessians, **hyper_param_overrides):
         hyper_params = self.optimizer_def.update_hyper_params(**hyper_param_overrides)
         new_target, new_state = self.optimizer_def.apply_gradient(hyper_params, self.target, self.state, grads, hessians)
