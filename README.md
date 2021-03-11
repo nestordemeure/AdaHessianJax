@@ -16,7 +16,7 @@ The implementation provides both a fast way to evaluate the diagonal of the hess
 
 ```python
 # gets the jax.experimental.optimizers version of the optimizer
-from adahessianJax.hessian import grad_and_hessian
+from adahessianJax import grad_and_hessian
 from adahessianJax.jax import adahessian
 
 # builds an optimizer triplet, no need to pass a learning rate
@@ -41,7 +41,7 @@ The implementation provides both a fast way to evaluate the diagonal of the hess
 
 ```python
 # gets the flax version of the optimizer
-from adahessianJax.hessian import grad_and_hessian
+from adahessianJax import grad_and_hessian
 from adahessianJax.flax import Adahessian
 
 # defines the optimizer, no need to pass a learning rate
