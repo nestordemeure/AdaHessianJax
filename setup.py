@@ -1,6 +1,6 @@
 # https://medium.com/@joel.barmettler/how-to-upload-your-python-package-to-pypi-65edc5fe9c56
-from distutils.core import setup
-import setuptools
+#from distutils.core import setup
+from setuptools import setup, find_packages
 
 setup(
     name = 'adahessianJax',
@@ -21,6 +21,5 @@ setup(
         'License :: OSI Approved :: Apache Software License',
         'Programming Language :: Python :: 3 :: Only',
     ],
-    package_dir={"": "adahessianJax"},
-    packages=setuptools.find_packages(where="adahessianJax", include=("adahessianJax",)),
+    packages=find_packages(),
 )
