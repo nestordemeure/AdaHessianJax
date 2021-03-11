@@ -1,7 +1,7 @@
 import jax.numpy as jnp
 from jax.experimental.optimizers import make_schedule
 
-from adahessianJax.hessian_computation import average_magnitude
+from ..hessian import average_magnitude
 from .second_order_optimizer_builder import second_order_optimizer
 
 @second_order_optimizer

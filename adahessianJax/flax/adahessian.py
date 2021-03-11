@@ -4,7 +4,7 @@ import numpy as onp
 from flax import struct
 from flax.optim.adam import _AdamParamState
 
-from adahessianJax.hessian_computation import average_magnitude
+from ..hessian import average_magnitude
 from .second_order_optimizer_builder import SecondOrderOptimizerDef
 
 @struct.dataclass

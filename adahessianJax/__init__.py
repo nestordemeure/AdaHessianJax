@@ -1,5 +1,5 @@
-#from .hessian_computation import grad_and_hessian, value_grad_and_hessian
-#from .jaxOptimizer import adahessian, second_order_optimizer, SecondOrderOptimizer
-#from .flaxOptimizer import Adahessian, SecondOrderOptimizer, SecondOrderOptimizerDef
+#from .hessian import grad_and_hessian, value_grad_and_hessian
+#from .jax import adahessian, second_order_optimizer, SecondOrderOptimizer
+#from .flax import Adahessian, SecondOrderOptimizer, SecondOrderOptimizerDef
 
-#__all__ = ['jaxOptimizer', 'flaxOptimizer', 'grad_and_hessian', 'value_grad_and_hessian']
+#__all__ = ['jax.adahessian', 'flax.Adahessian', 'grad_and_hessian', 'value_grad_and_hessian']
