@@ -4,7 +4,7 @@ from distutils.core import setup
 setup(
     name = 'adahessianJax',
     packages = ['adahessianJax'],
-    version = '1.0',
+    version = '1.1',
     license = 'apache-2.0',
     description = 'Jax implementation of the AdaHessian optimizer.',
     author = 'NestorDemeure',
