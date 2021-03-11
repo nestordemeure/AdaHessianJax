@@ -22,5 +22,5 @@ setup(
         'Programming Language :: Python :: 3 :: Only',
     ],
     package_dir={"": "adahessianJax"},
-    packages=setuptools.find_packages(where="adahessianJax"),
+    packages=setuptools.find_packages(where="adahessianJax", include=("adahessianJax",)),
 )
