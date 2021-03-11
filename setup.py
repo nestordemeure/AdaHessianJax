@@ -1,9 +1,9 @@
 # https://medium.com/@joel.barmettler/how-to-upload-your-python-package-to-pypi-65edc5fe9c56
 from distutils.core import setup
+import setuptools
 
 setup(
     name = 'adahessianJax',
-    packages = ['adahessianJax'],
     version = '1.1',
     license = 'apache-2.0',
     description = 'Jax implementation of the AdaHessian optimizer.',
@@ -21,4 +21,6 @@ setup(
         'License :: OSI Approved :: Apache Software License',
         'Programming Language :: Python :: 3 :: Only',
     ],
+    package_dir={"": "adahessianJax"},
+    packages=setuptools.find_packages(where="adahessianJax"),
 )
